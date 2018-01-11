@@ -11,4 +11,5 @@ Particular emphasis will be placed on analyzing, implementing, and comparing the
 wireless networks that are emerging in this area for sensor connectivity and aggregate
 transport of data to offsite locations. After building a proof of concept system, time permitting,
 we will implement it on an actual working farm. Alternative rural energy systems may also be
-explored and implemented to power the system at remote locations.
+explored
+and implemented to power the system at remote locations.
