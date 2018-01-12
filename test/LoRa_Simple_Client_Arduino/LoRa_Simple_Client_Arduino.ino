@@ -40,7 +40,7 @@ void setup()
   
   // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
   //Lower BandWidth for longer distance.
-  rf95.setSignalBandwidth(125000);
+  rf95.setSignalBandwidth(500000);
   
   // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8) 
   rf95.setCodingRate4(5);
@@ -58,7 +58,7 @@ void loop()
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
 
-  if (rf95.waitAvailableTimeout(3000))
+  if (rf95.waitAvailableTimeout(5000))
   { 
     // Should be a reply message for us now   
     if (rf95.recv(buf, &len))
@@ -77,7 +77,7 @@ void loop()
   {
     Serial.println("No reply, is LoRa server running?");
   }
-  delay(5000);
+  delay(1000);
 }
 
 
