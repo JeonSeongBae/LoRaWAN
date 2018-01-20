@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+      webToFirebase
+    </title>
+  </head>
+  <body>
+    <div>name</div>
+    <input type="text" id="name"></input>
+    <div>email</div>
+    <input type="email" id="email"></input>
+    <div>number</div>
+    <input type="number" id="number"></input>
+    <div class="">
+      <button onclick="writeUserData()" id="setButton">SET SAVE</button>
+      <button onclick="writeNewPost()" id="postButton">POST SAVE</button>
+    </div>
+
+    <div>name</div>
+    <div id="loadname"></div>
+    <div>email</div>
+    <div id="loademail"></div>
+    <div>number</div>
+    <div id="loadnumber"></div>
+  </body>
+  <!-- firebase를 연동하기 위한 script -->
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+
+<!-- firebase 프로젝트와 해당 script를 연동 -->
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyDWy4uYvOsQyDlAClLkCTnUxJIg9UQrEf8",
+      authDomain: "webtofire.firebaseapp.com",
+      databaseURL: "https://webtofire.firebaseio.com",
+      projectId: "webtofire",
+      storageBucket: "",
+      messagingSenderId: "632600607153"
+    };
+    firebase.initializeApp(config);
+
+    // database를 생성하여 변수로 저장
+    var database = firebase.database();
+
+    // set()를 사용하면 지정된 위치 데이터를 덮어씌워 저장
+    function writeUserData() {
+      var name = document.getElementById("name").value;
+      var email = document.getElementById("email").value;
+      var number = document.getElementById("number").value;
+      firebase.database().ref('set/').set({
+        username: name,
+        useremail: email,
+        usernumber : number
+        });
+      }
+
+    function writeNewPost() {
+      var name = document.getElementById("name").value;
+      var email = document.getElementById("email").value;
+      var number = document.getElementById("number").value;
+      // A post entry.
+      var postData = {
+        username: name,
+        useremail: email,
+        usernumber: number
+      };
+
+      // Get a key for a new Post.
+      var newPostKey = firebase.database().ref().child('posts').push().key;
+
+      // Write the new post's data simultaneously in the posts list and the user's post list.
+      var updates = {};
+      updates['/posts/' + newPostKey] = postData;
+
+      return firebase.database().ref().update(updates);
+    }
+
+    var databaseRef = firebase.database().ref('set/');
+      databaseRef.on('value', function(snapshot) {
+      document.getElementById("loadname").innerHTML = snapshot.val().username;
+      document.getElementById("loademail").innerHTML = snapshot.val().useremail;
+      document.getElementById("loadnumber").innerHTML = snapshot.val().usernumber;
+    });
+
+  </script>
+</html>
