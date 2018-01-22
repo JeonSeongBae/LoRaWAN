@@ -28,6 +28,7 @@
   </body>
   <!-- firebase를 연동하기 위한 script -->
   <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <!-- firebase 프로젝트와 해당 script를 연동 -->
   <script>
@@ -84,6 +85,37 @@
       document.getElementById("loademail").innerHTML = snapshot.val().useremail;
       document.getElementById("loadnumber").innerHTML = snapshot.val().usernumber;
     });
+
+    function test() {
+      var d = new Date();
+      var name = d.getHours();
+      var email = d.getMinutes();
+      var number = d.getSeconds();
+      firebase.database().ref('test/').set({
+        username: name,
+        useremail: email,
+        usernumber : number
+        });
+      }
+
+    var x = new XMLHttpRequest();
+    x.open("GET", "https://thingspeak.com/channels/405641/field/1.xml", true);
+    x.onreadystatechange = function () {
+      if (x.readyState == 4 && x.status == 200)
+      {
+        var doc = x.responseXML;
+        test();
+      }
+    };
+
+    this.proc = function()
+    {
+        x.open("GET", "https://thingspeak.com/channels/405641/field/1.xml", true);
+        x.send();
+    }
+
+    // interval에서 지정한 시간마다 실행
+    setInterval(this.proc, 500);
 
   </script>
 </html>
