@@ -88,8 +88,8 @@
 
     function test() {
       var d = new Date();
-      var name = d.getHours();
-      var email = d.getMinutes();
+      var name = d.getMinutes();
+      var email = d.getHours();
       var number = d.getSeconds();
       firebase.database().ref('test/').set({
         username: name,
@@ -97,25 +97,61 @@
         usernumber : number
         });
       }
+      $.ajax({
+         url: "https://thingspeak.com/channels/405641/field/1.xml",
+         async: true,
+         dataType: 'xml',
+         success: function(json) {
+            console.log("success");
+            alert("SUCCESS");
+            updater.proc();
+         },
+         error: function(error) {
+            console.log(error);
+            alert("ERROR");
+         }
+      });
 
-    var x = new XMLHttpRequest();
-    x.open("GET", "https://thingspeak.com/channels/405641/field/1.xml", true);
-    x.onreadystatechange = function () {
-      if (x.readyState == 4 && x.status == 200)
-      {
-        var doc = x.responseXML;
-        test();
+      var beforeXML = "";
+
+      var updater = new function(){
+          var xmlHttp     = new XMLHttpRequest();
+          // Ajax Setting
+          xmlHttp.onreadystatechange = function()
+          {
+              if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+              {
+                  var doc = xmlHttp.responseXML;
+                  newXML = doc.getElementsByTagName("last-entry-id")[0].innerHTML;
+                  if (newXML != beforeXML) {
+                      test();
+                      beforeXML = newXML;
+                  }
+                  updater.proc();
+              }
+          }
+
+          this.proc = function()
+          {
+              // Ajax 통신
+              xmlHttp.open("GET", "https://thingspeak.com/channels/405641/field/1.xml", true);
+              xmlHttp.send();
+
+          }
       }
-    };
 
-    this.proc = function()
-    {
-        x.open("GET", "https://thingspeak.com/channels/405641/field/1.xml", true);
-        x.send();
-    }
-
-    // interval에서 지정한 시간마다 실행
-    setInterval(this.proc, 500);
+      // 페이지 로딩을 끝마치면 채팅내용 가져오기 시작 [추가]
+    // var x = new XMLHttpRequest();
+    // x.open("GET", "https://thingspeak.com/channels/405641/field/1.xml", true);
+    // x.onreadystatechange = function () {
+    //   if (x.readyState == 4 && x.status == 200)
+    //   {
+    //     var doc = x.responseXML;
+    //     var abc = doc.getElementsByTagName("last-entry-id")[0];
+    //     test();
+    //   }
+    // };
+    // x.send(null);
 
   </script>
 </html>
