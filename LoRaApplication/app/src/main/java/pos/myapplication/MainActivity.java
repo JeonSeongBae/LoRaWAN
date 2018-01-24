@@ -4,6 +4,9 @@ package pos.myapplication;
     import android.support.v7.app.AppCompatActivity;
     import android.os.Bundle;
     import android.util.Log;
+    import android.view.View;
+    import android.widget.Button;
+    import android.widget.EditText;
     import android.widget.Toast;
 
     import com.google.firebase.auth.FirebaseAuth;
@@ -27,9 +30,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Write a message to the database
-        DatabaseReference myRef = database.getReference("message");
+        final DatabaseReference myRef = database.getReference("message");
+        EditText email = findViewById(R.id.email);
+        EditText password = findViewById(R.id.password);
+        final String semail = email.getText().toString();
+        final String spassword = password.getText().toString();
 
-        myRef.setValue("Hello, World!");
+        final test test = new test();
+
+        Button button = findViewById(R.id.signUp);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                test.setEmail(semail);
+                test.setPassword(spassword);
+                myRef.setValue(test);
+            }
+        });
+
+
 
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
