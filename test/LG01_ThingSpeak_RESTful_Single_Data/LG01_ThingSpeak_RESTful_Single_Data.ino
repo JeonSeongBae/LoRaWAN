@@ -22,7 +22,7 @@ RH_RF95 rf95;
 //For product: LG01. 
 #define BAUDRATE 115200
 
-String myWriteAPIString = "L99QRBUAVNJWFIGD";
+String = "L99QRBUAVNJWFIGD";
 uint16_t crcdata = 0;
 uint16_t recCRCData = 0;
 float frequency = 868.0;
@@ -156,7 +156,7 @@ void uploadData() {//Upload Data to ThingSpeak
 
 
   // form the string for the URL parameter, be careful about the required "
-  String upload_url = "https://api.thingspeak.com/update?api_key=";
+  String upload_url = " POST";
   upload_url += myWriteAPIString;
   upload_url += "&";
   upload_url += dataString;
@@ -181,5 +181,3 @@ void uploadData() {//Upload Data to ThingSpeak
   Console.println("####################################");
   Console.println("");
 }
-
-
