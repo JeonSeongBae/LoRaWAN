@@ -1,17 +1,3 @@
-/*
-  Upload Data to IoT Server ThingSpeak (https://thingspeak.com/):
-  Support Devices: LG01 
-  
-  Example sketch showing how to get data from remote LoRa node, 
-  Then send the value to IoT Server
-
-  It is designed to work with the other sketch dht11_client. 
-
-  modified 24 11 2016
-  by Edwin Chen <support@dragino.com>
-  Dragino Technology Co., Limited
-*/
-
 #include <SPI.h>
 #include <RH_RF95.h>
 #include <Console.h>
@@ -27,6 +13,7 @@ uint16_t crcdata = 0;
 uint16_t recCRCData = 0;
 float frequency = 868.0;
 String dataString = "";
+String firebaseURL = "";
 
 void uploadData(); // Upload Data to ThingSpeak.
 
@@ -153,11 +140,11 @@ void loop()
 
 void uploadData() {//Upload Data to ThingSpeak
   // form the string for the API header parameter:
-
-
+  
+  firebaseURL = "https://lg01-ba3b9.firebaseio.com/users.json";
   // form the string for the URL parameter, be careful about the required "
   String upload_url = " POST";
-  upload_url += myWriteAPIString;
+  upload_url += firebaseURL;
   upload_url += "&";
   upload_url += dataString;
 
