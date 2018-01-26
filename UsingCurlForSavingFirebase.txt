@@ -1,0 +1,6 @@
+$ curl -X PUT -d '{
+  "alanisawesome": {
+    "name": "Alan Turing",
+    "birthday": "June 23, 1912"
+  }
+}' 'https://lg01-ba3b9.firebaseio.com/users.json'
