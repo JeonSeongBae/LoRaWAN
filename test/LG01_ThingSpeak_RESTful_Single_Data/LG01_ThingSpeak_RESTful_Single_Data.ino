@@ -2,26 +2,31 @@
 #include <RH_RF95.h>
 #include <Console.h>
 #include <Process.h>
+#include <ArduinoJson.h>
 RH_RF95 rf95;
 
 //If you use Dragino IoT Mesh Firmware, uncomment below lines.
 //For product: LG01. 
 #define BAUDRATE 115200
 
-String = "L99QRBUAVNJWFIGD";
+String myWriteAPIString = "L99QRBUAVNJWFIGD";
 uint16_t crcdata = 0;
 uint16_t recCRCData = 0;
 float frequency = 868.0;
 String dataString = "";
-String firebaseURL = "";
 
 void uploadData(); // Upload Data to ThingSpeak.
+String jsondata = "";
+
+StaticJsonBuffer<200> jsonBuffer;
+JsonObject& root = jsonBuffer.createObject();
 
 void setup()
 {
     Bridge.begin(BAUDRATE);
     Console.begin(); 
-    // while(!Console);
+    while(!Console);
+
     if (!rf95.init())
         Console.println("init failed");
     ;
@@ -73,6 +78,7 @@ uint16_t recdata( unsigned char* recbuf, int Length)
 }
 void loop()
 {
+    uploadData();
     if (rf95.waitAvailableTimeout(2000))// Listen Data from LoRa Node
     {
         uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];//receive data buffer
@@ -140,21 +146,31 @@ void loop()
 
 void uploadData() {//Upload Data to ThingSpeak
   // form the string for the API header parameter:
-  
-  firebaseURL = "https://lg01-ba3b9.firebaseio.com/users.json";
+
+
   // form the string for the URL parameter, be careful about the required "
-  String upload_url = " POST";
-  upload_url += firebaseURL;
+  String upload_url = "https://api.thingspeak.com/update?api_key=";
+  upload_url += myWriteAPIString;
   upload_url += "&";
   upload_url += dataString;
 
   Console.println("Call Linux Command to Send Data");
   Process p;    // Create a process and call it "p", this process will execute a Linux curl command
-  p.begin("curl");
-  p.addParameter("-k");
-  p.addParameter(upload_url);
-  p.run();    // Run the process and wait for its termination
+  root["name"] = "1";
+  root.printTo(jsondata);
 
+  Console.println(jsondata);
+  p.begin("curl");
+  p.addParameter("-X");
+  p.addParameter("PUT");
+  p.addParameter("-d");
+  p.addParameter("'");
+  p.addParameter(jsondata);
+  p.addParameter("'");
+  p.addParameter("'https://lg01-ba3b9.firebaseio.com/users.json'");
+//  p.addParameter(upload_url);
+  p.run();    // Run the process and wait for its termination
+  jsondata = "";
   Console.print("Feedback from Linux: ");
   // If there's output from Linux,
   // send it out the Console:
@@ -168,3 +184,4 @@ void uploadData() {//Upload Data to ThingSpeak
   Console.println("####################################");
   Console.println("");
 }
+
