@@ -15,7 +15,7 @@
     <div>number</div>
     <input type="number" id="number"></input>
     <div class="">
-      <button onclick="writeUserData()" id="setButton">SET SAVE</button>
+      <button onclick="writeDogData()" id="setButton">SET SAVE</button>
       <button onclick="writeNewPost()" id="postButton">POST SAVE</button>
     </div>
 
@@ -48,15 +48,46 @@
 
     // set()를 사용하면 지정된 위치 데이터를 덮어씌워 저장
     function writeUserData() {
+      var array = new Array();
+      array[array.length]=1;
       var name = document.getElementById("name").value;
       var email = document.getElementById("email").value;
       var number = document.getElementById("number").value;
       firebase.database().ref('set/').set({
         username: name,
         useremail: email,
-        usernumber : number
+        usernumber : number,
+        array : array
         });
       }
+
+////////////////////////////////
+var arr = new Array();
+var first_data = {
+  x: <?php echo json_decode($_GET['y']); ?>,
+  y: <?php echo json_decode($_GET['y']); ?>
+};
+
+arr[0] = first_data;
+
+firebase.database().ref('dog_list').update(arr);
+
+function writeDogData(){
+  var databaseRef = firebase.database().ref('dog_list/');
+  databaseRef.once('value', function(snapshot) {
+    var dog_array = new Array();
+    dog_array = snapshot.val();
+    var postData = {
+      x: <?php echo json_decode($_GET['y']); ?>,
+      y: <?php echo json_decode($_GET['y']); ?>
+    };
+    dog_array[dog_array.length] = postData;
+
+    firebase.database().ref('dog_list').update(dog_array);
+  });
+}
+////////////////////////////////
+
 
     function writeNewPost() {
       var name = document.getElementById("name").value;
@@ -97,13 +128,13 @@
         usernumber : number
         });
       }
+
       $.ajax({
          url: "https://thingspeak.com/channels/405641/field/1.xml",
          async: true,
          dataType: 'xml',
          success: function(json) {
             console.log("success");
-            alert("SUCCESS");
             updater.proc();
          },
          error: function(error) {
