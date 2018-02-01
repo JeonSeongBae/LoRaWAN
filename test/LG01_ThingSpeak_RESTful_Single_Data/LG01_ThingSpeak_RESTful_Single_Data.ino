@@ -84,6 +84,7 @@ uint16_t recdata( unsigned char* recbuf, int Length)
 }
 void loop()
 {
+  uploadData();
     if (rf95.waitAvailableTimeout(2000))// Listen Data from LoRa Node
     {
         uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];//receive data buffer
@@ -127,11 +128,11 @@ void loop()
                     Console.println(hl);
                                        
                     dataString ="field1=";
-                    dataString += th;
+                    dataString += "1";
                     dataString +=".";
-                    dataString += tl;
+                    dataString += "2";
                     //dataString ="field2=";
-                    //dataString += h;
+                    //dataString += "3";
                     
                     uploadData(); // 
                     dataString="";
@@ -154,10 +155,10 @@ void uploadData() {//Upload Data to ThingSpeak
 
 
   // form the string for the URL parameter, be careful about the required "
-  String upload_url = "https://api.thingspeak.com/update?api_key=";
-  upload_url += myWriteAPIString;
-  upload_url += "&";
-  upload_url += dataString;
+  String upload_url = "https://webtofire.firebaseapp.com/?";
+//  upload_url += myWriteAPIString;
+//  upload_url += "&";
+  upload_url += "filed1=1";
 
   Console.println("Call Linux Command to Send Data");
   Process p;    // Create a process and call it "p", this process will execute a Linux curl command
