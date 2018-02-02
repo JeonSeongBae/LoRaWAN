@@ -84,7 +84,15 @@ uint16_t recdata( unsigned char* recbuf, int Length)
 }
 void loop()
 {
-  uploadData();
+//  uploadData();
+  // Simulate Get Sensor value
+  Console.println("===== Start =====");
+  int sensor = random(10, 20); 
+  Process p;
+  p.runShellCommand("curl -k -X POST https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : " + String(sensor) + "}'");
+  while(p.running());
+  delay(2000);      
+  Console.println("===== End ====="); 
     if (rf95.waitAvailableTimeout(2000))// Listen Data from LoRa Node
     {
         uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];//receive data buffer
@@ -162,9 +170,9 @@ void uploadData() {//Upload Data to ThingSpeak
 
   Console.println("Call Linux Command to Send Data");
   Process p;    // Create a process and call it "p", this process will execute a Linux curl command
-  p.begin("curl");
-  p.addParameter("-k");
-  p.addParameter(upload_url);
+//  p.begin("curl");
+//  p.addParameter("-k");
+//  p.addParameter(upload_url);
   p.run();    // Run the process and wait for its termination
 
   Console.print("Feedback from Linux: ");
