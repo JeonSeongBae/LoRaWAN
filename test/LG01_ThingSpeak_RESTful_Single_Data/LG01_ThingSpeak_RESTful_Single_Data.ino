@@ -20,29 +20,26 @@ RH_RF95 rf95;
 //For product: LG01. 
 #define BAUDRATE 115200
 
-String myWriteAPIString = "B9Z0R25QNVEBKIFY";
 uint16_t crcdata = 0;
 uint16_t recCRCData = 0;
 float frequency = 868.0;
 String dataString = "";
 
-void uploadData(); // Upload Data to ThingSpeak.
+void uploadData();
 
 void setup()
 {
     Bridge.begin(BAUDRATE);
     Console.begin(); 
-    // while(!Console);
+    // 작동시키기 위해 Console을 실행
+//    while(!Console);
     if (!rf95.init())
         Console.println("init failed");
-    ;
     // Setup ISM frequency
     rf95.setFrequency(frequency);
     // Setup Power,dBm
     rf95.setTxPower(13);
-    
     Console.println("LoRa Gateway Example  --");
-    Console.println("    Upload Single Data to ThinkSpeak");
 }
 
 uint16_t calcByte(uint16_t crc, uint8_t b)
@@ -83,16 +80,10 @@ uint16_t recdata( unsigned char* recbuf, int Length)
     recCRCData |= recbuf[Length - 2];
 }
 void loop()
-{
-//  uploadData();
+{ 
+  Console.println("##### void #####");
+  uploadData();
   // Simulate Get Sensor value
-  Console.println("===== Start =====");
-  int sensor = random(10, 20); 
-  Process p;
-  p.runShellCommand("curl -k -X POST https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : " + String(sensor) + "}'");
-  while(p.running());
-  delay(2000);      
-  Console.println("===== End ====="); 
     if (rf95.waitAvailableTimeout(2000))// Listen Data from LoRa Node
     {
         uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];//receive data buffer
@@ -134,15 +125,8 @@ void loop()
                     Console.print(hh);
                     Console.print(".");
                     Console.println(hl);
-                                       
-                    dataString ="field1=";
-                    dataString += "1";
-                    dataString +=".";
-                    dataString += "2";
-                    //dataString ="field2=";
-                    //dataString += "3";
-                    
-                    uploadData(); // 
+                    Console.println("##### parameter #####");
+                    uploadData(hh, hl, th, tl);
                     dataString="";
                 }
             } 
@@ -151,40 +135,32 @@ void loop()
          }
          else
          {
-              //Console.println("recv failed");
-              ;
+              Console.println("recv failed");
           }
      }
- 
 }
 
-void uploadData() {//Upload Data to ThingSpeak
-  // form the string for the API header parameter:
+void uploadData(int hh, int hl, int th, int tl) {
+  //Upload Data to Firebase
+  // Simulate Get Sensor value
+  Console.println("===== Start =====");
+  Console.println(hh);
+  Process p;
+  p.runShellCommand("curl -k -X PUT https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : " + String(hh) + "}'");
+  while(p.running());
+  Console.println("===== End ====="); 
+  delay(5000);  
+}
 
-
-  // form the string for the URL parameter, be careful about the required "
-  String upload_url = "https://webtofire.firebaseapp.com/?";
-//  upload_url += myWriteAPIString;
-//  upload_url += "&";
-  upload_url += "filed1=1";
-
-  Console.println("Call Linux Command to Send Data");
-  Process p;    // Create a process and call it "p", this process will execute a Linux curl command
-//  p.begin("curl");
-//  p.addParameter("-k");
-//  p.addParameter(upload_url);
-  p.run();    // Run the process and wait for its termination
-
-  Console.print("Feedback from Linux: ");
-  // If there's output from Linux,
-  // send it out the Console:
-  while (p.available()>0) 
-  {
-    char c = p.read();
-    Console.write(c);
-  }
-  Console.println("");
-  Console.println("Call Finished");
-  Console.println("####################################");
-  Console.println("");
+void uploadData() {
+  //Upload Data to Firebase
+  // Simulate Get Sensor value
+  Console.println("===== Start =====");
+  int sensor = random(10, 20);
+  Console.println(sensor);
+  Process p;
+  p.runShellCommand("curl -k -X POST https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : " + String(sensor) + "}'");
+  while(p.running());
+  Console.println("===== End ====="); 
+  delay(2000);  
 }
