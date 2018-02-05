@@ -4,9 +4,7 @@
   
   Example sketch showing how to get data from remote LoRa node, 
   Then send the value to IoT Server
-
   It is designed to work with the other sketch dht11_client. 
-
   modified 24 11 2016
   by Edwin Chen <support@dragino.com>
   Dragino Technology Co., Limited
@@ -22,7 +20,7 @@ RH_RF95 rf95;
 //For product: LG01. 
 #define BAUDRATE 115200
 
-String myWriteAPIString = "L99QRBUAVNJWFIGD";
+String myWriteAPIString = "B9Z0R25QNVEBKIFY";
 uint16_t crcdata = 0;
 uint16_t recCRCData = 0;
 float frequency = 868.0;
@@ -86,6 +84,15 @@ uint16_t recdata( unsigned char* recbuf, int Length)
 }
 void loop()
 {
+//  uploadData();
+  // Simulate Get Sensor value
+  Console.println("===== Start =====");
+  int sensor = random(10, 20); 
+  Process p;
+  p.runShellCommand("curl -k -X POST https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : " + String(sensor) + "}'");
+  while(p.running());
+  delay(2000);      
+  Console.println("===== End ====="); 
     if (rf95.waitAvailableTimeout(2000))// Listen Data from LoRa Node
     {
         uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];//receive data buffer
@@ -129,11 +136,11 @@ void loop()
                     Console.println(hl);
                                        
                     dataString ="field1=";
-                    dataString += th;
+                    dataString += "1";
                     dataString +=".";
-                    dataString += tl;
+                    dataString += "2";
                     //dataString ="field2=";
-                    //dataString += h;
+                    //dataString += "3";
                     
                     uploadData(); // 
                     dataString="";
@@ -156,16 +163,16 @@ void uploadData() {//Upload Data to ThingSpeak
 
 
   // form the string for the URL parameter, be careful about the required "
-  String upload_url = "https://api.thingspeak.com/update?api_key=";
-  upload_url += myWriteAPIString;
-  upload_url += "&";
-  upload_url += dataString;
+  String upload_url = "https://webtofire.firebaseapp.com/?";
+//  upload_url += myWriteAPIString;
+//  upload_url += "&";
+  upload_url += "filed1=1";
 
   Console.println("Call Linux Command to Send Data");
   Process p;    // Create a process and call it "p", this process will execute a Linux curl command
-  p.begin("curl");
-  p.addParameter("-k");
-  p.addParameter(upload_url);
+//  p.begin("curl");
+//  p.addParameter("-k");
+//  p.addParameter(upload_url);
   p.run();    // Run the process and wait for its termination
 
   Console.print("Feedback from Linux: ");
@@ -181,5 +188,3 @@ void uploadData() {//Upload Data to ThingSpeak
   Console.println("####################################");
   Console.println("");
 }
-
-

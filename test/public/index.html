@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+      webToFirebase
+    </title>
+  </head>
+  <body>
+    <div>name</div>
+    <input type="text" id="name"></input>
+    <div>email</div>
+    <input type="email" id="email"></input>
+    <div>number</div>
+    <input type="number" id="number"></input>
+    <div class="">
+      <button onclick="writeDogData()" id="setButton">SET SAVE</button>
+      <button onclick="writeNewPost()" id="postButton">POST SAVE</button>
+    </div>
+
+    <div>name</div>
+    <div id="loadname"></div>
+    <div>email</div>
+    <div id="loademail"></div>
+    <div>number</div>
+    <div id="loadnumber"></div>
+  </body>
+  <!-- firebase를 연동하기 위한 script -->
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- firebase 프로젝트와 해당 script를 연동 -->
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyDWy4uYvOsQyDlAClLkCTnUxJIg9UQrEf8",
+      authDomain: "webtofire.firebaseapp.com",
+      databaseURL: "https://webtofire.firebaseio.com",
+      projectId: "webtofire",
+      storageBucket: "",
+      messagingSenderId: "632600607153"
+    };
+    firebase.initializeApp(config);
+
+    // database를 생성하여 변수로 저장
+    var database = firebase.database();
+
+    // set()를 사용하면 지정된 위치 데이터를 덮어씌워 저장
+    function writeUserData() {
+      var array = new Array();
+      array[array.length]=1;
+      var name = document.getElementById("name").value;
+      var email = document.getElementById("email").value;
+      var number = document.getElementById("number").value;
+      firebase.database().ref('set/').set({
+        username: name,
+        useremail: email,
+        usernumber : number,
+        array : array
+        });
+      }
+
+////////////////////////////////
+var arr = new Array();
+var first_data = {
+  x: <?php echo json_decode($_GET['y']); ?>,
+  y: <?php echo json_decode($_GET['y']); ?>
+};
+
+arr[0] = first_data;
+
+firebase.database().ref('dog_list').update(arr);
+
+function writeDogData(){
+  var databaseRef = firebase.database().ref('dog_list/');
+  databaseRef.once('value', function(snapshot) {
+    var dog_array = new Array();
+    dog_array = snapshot.val();
+    var postData = {
+      x: <?php echo json_decode($_GET['y']); ?>,
+      y: <?php echo json_decode($_GET['y']); ?>
+    };
+    dog_array[dog_array.length] = postData;
+
+    firebase.database().ref('dog_list').update(dog_array);
+  });
+}
+////////////////////////////////
+
+
+    function writeNewPost() {
+      var name = document.getElementById("name").value;
+      var email = document.getElementById("email").value;
+      var number = document.getElementById("number").value;
+      // A post entry.
+      var postData = {
+        username: name,
+        useremail: email,
+        usernumber: number
+      };
+
+      // Get a key for a new Post.
+      var newPostKey = firebase.database().ref().child('posts').push().key;
+
+      // Write the new post's data simultaneously in the posts list and the user's post list.
+      var updates = {};
+      updates['/posts/' + newPostKey] = postData;
+
+      return firebase.database().ref().update(updates);
+    }
+
+    var databaseRef = firebase.database().ref('set/');
+      databaseRef.on('value', function(snapshot) {
+      document.getElementById("loadname").innerHTML = snapshot.val().username;
+      document.getElementById("loademail").innerHTML = snapshot.val().useremail;
+      document.getElementById("loadnumber").innerHTML = snapshot.val().usernumber;
+    });
+
+    function test() {
+      var d = new Date();
+      var name = d.getMinutes();
+      var email = d.getHours();
+      var number = d.getSeconds();
+      firebase.database().ref('test/').set({
+        username: name,
+        useremail: email,
+        usernumber : number
+        });
+      }
+
+      $.ajax({
+         url: "https://thingspeak.com/channels/405641/field/1.xml",
+         async: true,
+         dataType: 'xml',
+         success: function(json) {
+            console.log("success");
+            updater.proc();
+         },
+         error: function(error) {
+            console.log(error);
+            alert("ERROR");
+         }
+      });
+
+      var beforeXML = "";
+
+      var updater = new function(){
+          var xmlHttp     = new XMLHttpRequest();
+          // Ajax Setting
+          xmlHttp.onreadystatechange = function()
+          {
+              if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+              {
+                  var doc = xmlHttp.responseXML;
+                  newXML = doc.getElementsByTagName("last-entry-id")[0].innerHTML;
+                  if (newXML != beforeXML) {
+                      test();
+                      beforeXML = newXML;
+                  }
+                  updater.proc();
+              }
+          }
+
+          this.proc = function()
+          {
+              // Ajax 통신
+              xmlHttp.open("GET", "https://thingspeak.com/channels/405641/field/1.xml", true);
+              xmlHttp.send();
+
+          }
+      }
+
+      // 페이지 로딩을 끝마치면 채팅내용 가져오기 시작 [추가]
+    // var x = new XMLHttpRequest();
+    // x.open("GET", "https://thingspeak.com/channels/405641/field/1.xml", true);
+    // x.onreadystatechange = function () {
+    //   if (x.readyState == 4 && x.status == 200)
+    //   {
+    //     var doc = x.responseXML;
+    //     var abc = doc.getElementsByTagName("last-entry-id")[0];
+    //     test();
+    //   }
+    // };
+    // x.send(null);
+
+  </script>
+</html>
