@@ -150,10 +150,14 @@ void loop()
     data[0] = node_id[0] ;
     data[1] = node_id[1] ;
     data[2] = node_id[2] ;
-    data[3] = dht_dat[0];//Get Humidity Integer Part
-    data[4] = dht_dat[1];//Get Humidity Decimal Part
-    data[5] = dht_dat[2];//Get Temperature Integer Part
-    data[6] = dht_dat[3];//Get Temperature Decimal Part
+//    data[3] = dht_dat[0];//Get Humidity Integer Part
+//    data[4] = dht_dat[1];//Get Humidity Decimal Part
+//    data[5] = dht_dat[2];//Get Temperature Integer Part
+//    data[6] = dht_dat[3];//Get Temperature Decimal Part
+    data[3] = random(10, 20);
+    data[4] = random(10, 20);
+    data[5] = random(10, 20);
+    data[6] = random(10, 20);
     switch (bGlobalErr)
     {
       case 0:
