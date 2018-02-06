@@ -154,10 +154,10 @@ void loop()
 //    data[4] = dht_dat[1];//Get Humidity Decimal Part
 //    data[5] = dht_dat[2];//Get Temperature Integer Part
 //    data[6] = dht_dat[3];//Get Temperature Decimal Part
-    data[3] = '1';
-    data[4] = '2';
-    data[5] = '3';
-    data[6] = '4';
+    data[3] = random(10, 20);
+    data[4] = random(10, 20);
+    data[5] = random(10, 20);
+    data[6] = random(10, 20);
     switch (bGlobalErr)
     {
       case 0:

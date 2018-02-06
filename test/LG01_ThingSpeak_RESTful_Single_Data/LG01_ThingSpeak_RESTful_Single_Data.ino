@@ -24,7 +24,7 @@ uint16_t crcdata = 0;
 uint16_t recCRCData = 0;
 float frequency = 868.0;
 String dataString = "";
-
+int updateInt = 0;
 void uploadData();
 
 void setup()
@@ -126,7 +126,7 @@ void loop()
                     Console.print(".");
                     Console.println(hl);
                     Console.println("##### parameter #####");
-                    uploadData(hh, hl, th, tl);
+                    updateInt=hh;
                     dataString="";
                 }
             } 
@@ -140,18 +140,6 @@ void loop()
      }
 }
 
-void uploadData(int hh, int hl, int th, int tl) {
-  //Upload Data to Firebase
-  // Simulate Get Sensor value
-  Console.println("===== Start =====");
-  Console.println(hh);
-  Process p;
-  p.runShellCommand("curl -k -X PUT https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : " + String(hh) + "}'");
-  while(p.running());
-  Console.println("===== End ====="); 
-  delay(5000);  
-}
-
 void uploadData() {
   //Upload Data to Firebase
   // Simulate Get Sensor value
@@ -159,7 +147,7 @@ void uploadData() {
   int sensor = random(10, 20);
   Console.println(sensor);
   Process p;
-  p.runShellCommand("curl -k -X POST https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : " + String(sensor) + "}'");
+  p.runShellCommand("curl -k -X PUT https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : " + String(updateInt) + "}'");
   while(p.running());
   Console.println("===== End ====="); 
   delay(2000);  

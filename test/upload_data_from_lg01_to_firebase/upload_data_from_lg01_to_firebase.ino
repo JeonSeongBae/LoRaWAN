@@ -18,7 +18,7 @@ void loop()
   int sensor = random(10, 20);
   Console.println(sensor);
   Process p;
-  p.runShellCommand("curl -k -X PUT https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : " + String(sensor) + "}'");
+  p.runShellCommand("curl -k -X POST https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : " + String(sensor) + "}'");
   while(p.running());
   Console.println("===== End ====="); 
   delay(2000);                
