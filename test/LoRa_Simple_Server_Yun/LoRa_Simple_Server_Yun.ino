@@ -83,7 +83,7 @@ void loop()
       rf95.waitPacketSent();
       Console.println("Sent a reply");
       digitalWrite(led, LOW);
-      uploadData();
+//      uploadData();
     }
     else
     {
@@ -103,6 +103,4 @@ void uploadData()
   while(p.running());
   Console.println("===== End ====="); 
   delay(2000);
-  }
-
-
+}
