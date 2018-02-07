@@ -5,9 +5,7 @@
   Example sketch showing how to read Temperature and Humidity from DHT11 sensor,  
   Then send the value to LoRa Gateway, the LoRa Gateway will send the value to the 
   IoT server
-
   It is designed to work with the other sketch dht11_server. 
-
   modified 24 11 2016
   by Edwin Chen <support@dragino.com>
   Dragino Technology Co., Limited
@@ -19,11 +17,10 @@
 
 RH_RF95 rf95;
 
-#define dht_dpin A0 // Use A0 pin as Data pin for DHT11. 
+//#define dht_dpin A0 // Use A0 pin as Data pin for DHT11. 
 byte bGlobalErr;
 char dht_dat[5]; // Store Sensor Data
 char node_id[3] = {1,1,1}; //LoRa End Node ID
-String stringOne;
 float frequency = 868.0;
 unsigned int count = 1;
 
@@ -51,8 +48,8 @@ void setup()
 
 void InitDHT()
 {
-    pinMode(dht_dpin,OUTPUT);//Set A0 to output
-    digitalWrite(dht_dpin,HIGH);//Pull high A0
+//    pinMode(dht_dpin,OUTPUT);//Set A0 to output
+//    digitalWrite(dht_dpin,HIGH);//Pull high A0
 }
 
 //Get Sensor Data
@@ -63,31 +60,31 @@ void ReadDHT()
     byte i;
         
     //pinMode(dht_dpin,OUTPUT);
-    digitalWrite(dht_dpin,LOW);//Pull Low A0 and send signal
+//    digitalWrite(dht_dpin,LOW);//Pull Low A0 and send signal
     delay(30);//Delay > 18ms so DHT11 can get the start signal
         
-    digitalWrite(dht_dpin,HIGH);
-    delayMicroseconds(40);//Check the high level time to see if the data is 0 or 1
-    pinMode(dht_dpin,INPUT);
+//    digitalWrite(dht_dpin,HIGH);
+//    delayMicroseconds(40);//Check the high level time to see if the data is 0 or 1
+//    pinMode(dht_dpin,INPUT);
     // delayMicroseconds(40);
-    dht_in=digitalRead(dht_dpin);//Get A0 Status
+//    dht_in=digitalRead(dht_dpin);//Get A0 Status
     //   Serial.println(dht_in,DEC);
-    if(dht_in){
-        bGlobalErr=1;
-        return;
-    }
+//    if(dht_in){
+//        bGlobalErr=1;
+//        return;
+//    }
     delayMicroseconds(80);//DHT11 send response, pull low A0 80us
-    dht_in=digitalRead(dht_dpin);
+//    dht_in=digitalRead(dht_dpin);
     
-    if(!dht_in){
-        bGlobalErr=2;
-        return;
-    }
+//    if(!dht_in){
+//        bGlobalErr=2;
+//        return;
+//    }
     delayMicroseconds(80);//DHT11 send response, pull low A0 80us
     for (i=0; i<5; i++)//Get sensor data
     dht_dat[i] = read_dht_dat();
-    pinMode(dht_dpin,OUTPUT);
-    digitalWrite(dht_dpin,HIGH);//release signal and wait for next signal
+//    pinMode(dht_dpin,OUTPUT);
+//    digitalWrite(dht_dpin,HIGH);//release signal and wait for next signal
     byte dht_check_sum = dht_dat[0]+dht_dat[1]+dht_dat[2]+dht_dat[3];//calculate check sum
     if(dht_dat[4]!= dht_check_sum)//check sum mismatch
         {bGlobalErr=3;}
@@ -98,11 +95,11 @@ byte read_dht_dat(){
     byte result=0;
     for(i=0; i< 8; i++)
     {
-        while(digitalRead(dht_dpin)==LOW);//wait 50us
-        delayMicroseconds(30);//Check the high level time to see if the data is 0 or 1
-        if (digitalRead(dht_dpin)==HIGH)
+//        while(digitalRead(dht_dpin)==LOW);//wait 50us
+//        delayMicroseconds(30);//Check the high level time to see if the data is 0 or 1
+//        if (digitalRead(dht_dpin)==HIGH)
         result |=(1<<(7-i));//
-        while (digitalRead(dht_dpin)==HIGH);//Get High, Wait for next data sampleing. 
+//        while (digitalRead(dht_dpin)==HIGH);//Get High, Wait for next data sampleing. 
     }
     return result;
 }
@@ -150,14 +147,14 @@ void loop()
     data[0] = node_id[0] ;
     data[1] = node_id[1] ;
     data[2] = node_id[2] ;
+    data[3] = random(10, 40);
+    data[4] = random(10, 40);
+    data[5] = random(10, 40);
+    data[6] = random(10, 40);
 //    data[3] = dht_dat[0];//Get Humidity Integer Part
 //    data[4] = dht_dat[1];//Get Humidity Decimal Part
 //    data[5] = dht_dat[2];//Get Temperature Integer Part
 //    data[6] = dht_dat[3];//Get Temperature Decimal Part
-    data[3] = random(10, 20);
-    data[4] = random(10, 20);
-    data[5] = random(10, 20);
-    data[6] = random(10, 20);
     switch (bGlobalErr)
     {
       case 0:
@@ -229,7 +226,7 @@ void loop()
        {
             if(buf[0] == node_id[0] ||buf[1] == node_id[2] ||buf[2] == node_id[2] ) // Check if reply message has the our node ID
            {
-               pinMode(4, OUTPUT);
+//               pinMode(4, OUTPUT);
                digitalWrite(4, HIGH);
                Serial.print("Got Reply from Gateway: ");//print reply
                Serial.println((char*)buf);
@@ -251,9 +248,6 @@ void loop()
         Serial.println("No reply, is LoRa gateway running?");//No signal reply
         rf95.send(sendBuf, strlen((char*)sendBuf));//resend data
     }
-    delay(3000); // Send sensor data every 30 seconds
+    delay(5000); // Send sensor data every XX seconds
     Serial.println("");
 }
-
-
-
