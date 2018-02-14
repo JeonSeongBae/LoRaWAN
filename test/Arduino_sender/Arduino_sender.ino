@@ -1,5 +1,5 @@
 /*
-  Upload Data to IoT Server ThingSpeak (https://thingspeak.com/):
+  Upload Data to FireBase Database:
   Support Devices: LoRa Shield + Arduino 
   
   Example sketch showing how to read Temperature and Humidity from DHT11 sensor,  
@@ -26,7 +26,6 @@ unsigned int count = 1;
 
 void setup()
 {
-    InitDHT();
     Serial.begin(9600);
     if (!rf95.init())
         Serial.println("init failed");
@@ -46,45 +45,15 @@ void setup()
     Serial.println();
 }
 
-void InitDHT()
-{
-//    pinMode(dht_dpin,OUTPUT);//Set A0 to output
-//    digitalWrite(dht_dpin,HIGH);//Pull high A0
-}
-
 //Get Sensor Data
 void ReadDHT()
 {
     bGlobalErr=0;
     byte dht_in;
     byte i;
-        
-    //pinMode(dht_dpin,OUTPUT);
-//    digitalWrite(dht_dpin,LOW);//Pull Low A0 and send signal
     delay(30);//Delay > 18ms so DHT11 can get the start signal
-        
-//    digitalWrite(dht_dpin,HIGH);
-//    delayMicroseconds(40);//Check the high level time to see if the data is 0 or 1
-//    pinMode(dht_dpin,INPUT);
-    // delayMicroseconds(40);
-//    dht_in=digitalRead(dht_dpin);//Get A0 Status
-    //   Serial.println(dht_in,DEC);
-//    if(dht_in){
-//        bGlobalErr=1;
-//        return;
-//    }
-    delayMicroseconds(80);//DHT11 send response, pull low A0 80us
-//    dht_in=digitalRead(dht_dpin);
-    
-//    if(!dht_in){
-//        bGlobalErr=2;
-//        return;
-//    }
-    delayMicroseconds(80);//DHT11 send response, pull low A0 80us
     for (i=0; i<5; i++)//Get sensor data
     dht_dat[i] = read_dht_dat();
-//    pinMode(dht_dpin,OUTPUT);
-//    digitalWrite(dht_dpin,HIGH);//release signal and wait for next signal
     byte dht_check_sum = dht_dat[0]+dht_dat[1]+dht_dat[2]+dht_dat[3];//calculate check sum
     if(dht_dat[4]!= dht_check_sum)//check sum mismatch
         {bGlobalErr=3;}
@@ -95,11 +64,7 @@ byte read_dht_dat(){
     byte result=0;
     for(i=0; i< 8; i++)
     {
-//        while(digitalRead(dht_dpin)==LOW);//wait 50us
-//        delayMicroseconds(30);//Check the high level time to see if the data is 0 or 1
-//        if (digitalRead(dht_dpin)==HIGH)
-        result |=(1<<(7-i));//
-//        while (digitalRead(dht_dpin)==HIGH);//Get High, Wait for next data sampleing. 
+        result |=(1<<(7-i));
     }
     return result;
 }
@@ -226,7 +191,6 @@ void loop()
        {
             if(buf[0] == node_id[0] ||buf[1] == node_id[2] ||buf[2] == node_id[2] ) // Check if reply message has the our node ID
            {
-//               pinMode(4, OUTPUT);
                digitalWrite(4, HIGH);
                Serial.print("Got Reply from Gateway: ");//print reply
                Serial.println((char*)buf);

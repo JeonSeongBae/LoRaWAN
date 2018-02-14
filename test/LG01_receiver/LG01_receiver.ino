@@ -1,5 +1,5 @@
 /*
-  Upload Data to IoT Server ThingSpeak (https://thingspeak.com/):
+  Upload Data to FireBase Database:
   Support Devices: LG01 
   
   Example sketch showing how to get data from remote LoRa node, 
@@ -20,13 +20,11 @@ RH_RF95 rf95;
 //For product: LG01. 
 #define BAUDRATE 115200
 
-//String myWriteAPIString = "";
 uint16_t crcdata = 0;
 uint16_t recCRCData = 0;
 float frequency = 868.0;
-//String dataString = "";
 
-void uploadData(); // Upload Data to ThingSpeak.
+void uploadData(); // Upload Data
 
 void setup()
 {
@@ -35,7 +33,6 @@ void setup()
     // while(!Console);
     if (!rf95.init())
         Console.println("init failed");
-    ;
     // Setup ISM frequency
     rf95.setFrequency(frequency);
     // Setup Power,dBm
@@ -125,16 +122,8 @@ void loop()
                     Console.print(hh);
                     Console.print(".");
                     Console.println(hl);
-                                       
-//                    dataString ="field1=";
-//                    dataString += th;
-//                    dataString +=".";
-//                    dataString += tl;
-                    //dataString ="field2=";
-                    //dataString += h;
-                    
+
                     uploadData(th, tl); // 
-//                    dataString="";
                 }
             } 
             else 
@@ -142,29 +131,15 @@ void loop()
          }
          else
          {
-              //Console.println("recv failed");
-              ;
+              Console.println("recv failed");
           }
      }
  
 }
 
 void uploadData(int th, int tl) {//Upload Data to ThingSpeak
-  // form the string for the API header parameter:
-
-
-  // form the string for the URL parameter, be careful about the required "
-//  String upload_url = "https://api.thingspeak.com/update?api_key=";
-//  upload_url += myWriteAPIString;
-//  upload_url += "&";
-//  upload_url += dataString;
 
   Console.println("Call Linux Command to Send Data");
-//  Process p;    // Create a process and call it "p", this process will execute a Linux curl command
-//  p.begin("curl");
-//  p.addParameter("-k");
-//  p.addParameter(upload_url);
-//  p.run();    // Run the process and wait for its termination
 
   // Simulate Get Sensor value
   Console.println("===== Start =====");
