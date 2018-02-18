@@ -20,9 +20,9 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     Context mContext;
-    EditText temperature;
-    EditText huminity;
-    Button update;
+    EditText et_temperature;
+    EditText et_huminity;
+    Button btn_load;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,19 +30,32 @@ public class MainActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         mContext = this;
-        temperature = findViewById(R.id.temperature);
-        huminity = findViewById(R.id.huminity);
-        update = findViewById(R.id.updateButton);
+        et_temperature = findViewById(R.id.et_temperature);
+        et_huminity = findViewById(R.id.et_huminity);
+        btn_load = findViewById(R.id.btn_load);
+        databaseReference.child("users").child("name").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HashMap<String, Double> name = (HashMap<String, Double>) dataSnapshot.getValue();
+                et_temperature.setText(String.valueOf(name.get("temperature"))+"°F");
+                et_huminity.setText(String.valueOf(name.get("huminity"))+"%");
+                Toast.makeText(mContext, String.valueOf(name.get("temperature"))+"\n"+String.valueOf(name.get("huminity")), Toast.LENGTH_LONG).show();
+            }
 
-        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        btn_load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 databaseReference.child("users").child("name").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         HashMap<String, Double> name = (HashMap<String, Double>) dataSnapshot.getValue();
-                        temperature.setText(String.valueOf(name.get("temperature")));
-                        huminity.setText(String.valueOf(name.get("huminity")));
+                        et_temperature.setText(String.valueOf(name.get("temperature"))+"°F");
+                        et_huminity.setText(String.valueOf(name.get("huminity"))+"%");
                         Toast.makeText(mContext, String.valueOf(name.get("temperature"))+"\n"+String.valueOf(name.get("huminity")), Toast.LENGTH_LONG).show();
                     }
 
