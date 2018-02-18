@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="kaiser.myapplication.MainActivity">
 
+    <Button
+        android:id="@+id/updateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="update"
+        tools:layout_editor_absoluteX="148dp"
+        tools:layout_editor_absoluteY="368dp" />
+
     <TextView
-        android:layout_width="50dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Temperature : "
         tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="240dp"
-        tools:ignore="MissingConstraints" />
+        tools:layout_editor_absoluteY="175dp" />
 
     <EditText
-        android:layout_width="50dp"
-        android:layout_height="30dp"
+        android:id="@+id/temperature"
+        android:layout_width="95dp"
+        android:layout_height="68dp"
         android:text="0.0"
-        tools:layout_editor_absoluteX="100dp"
-        tools:layout_editor_absoluteY="240dp"
-        tools:ignore="MissingConstraints" />
+        tools:layout_editor_absoluteX="46dp"
+        tools:layout_editor_absoluteY="224dp" />
 
     <TextView
-        android:layout_width="50dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="huminity : "
-        tools:layout_editor_absoluteX="238dp"
-        tools:layout_editor_absoluteY="240dp"
-        tools:ignore="MissingConstraints" />
+        tools:layout_editor_absoluteX="236dp"
+        tools:layout_editor_absoluteY="175dp" />
 
     <EditText
-        android:layout_width="50dp"
-        android:layout_height="30dp"
+        android:id="@+id/huminity"
+        android:layout_width="76dp"
+        android:layout_height="107dp"
         android:text="0%"
-        tools:layout_editor_absoluteX="318dp"
-        tools:layout_editor_absoluteY="240dp"
-        tools:ignore="MissingConstraints" />
+        tools:layout_editor_absoluteX="247dp"
+        tools:layout_editor_absoluteY="262dp" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
