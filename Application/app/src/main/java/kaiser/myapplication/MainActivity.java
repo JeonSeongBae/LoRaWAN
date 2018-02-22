@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     Context mContext;
     EditText et_temperature;
-    EditText et_huminity;
+    EditText et_humidity;
     Button btn_load;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +32,15 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference();
         mContext = this;
         et_temperature = findViewById(R.id.et_temperature);
-        et_huminity = findViewById(R.id.et_huminity);
+        et_humidity = findViewById(R.id.et_huminity);
         btn_load = findViewById(R.id.btn_load);
         databaseReference.child("users").child("name").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 HashMap<String, Double> name = (HashMap<String, Double>) dataSnapshot.getValue();
                 et_temperature.setText(String.valueOf(name.get("temperature"))+"°F");
-                et_huminity.setText(String.valueOf(name.get("huminity"))+"%");
-                Toast.makeText(mContext, String.valueOf(name.get("temperature"))+"\n"+String.valueOf(name.get("huminity")), Toast.LENGTH_LONG).show();
+                et_humidity.setText(String.valueOf(name.get("humidity"))+"%");
+                Toast.makeText(mContext, String.valueOf(name.get("temperature"))+"\n"+String.valueOf(name.get("huminity")), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -55,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         HashMap<String, Double> name = (HashMap<String, Double>) dataSnapshot.getValue();
                         et_temperature.setText(String.valueOf(name.get("temperature"))+"°F");
-                        et_huminity.setText(String.valueOf(name.get("huminity"))+"%");
-                        Toast.makeText(mContext, String.valueOf(name.get("temperature"))+"\n"+String.valueOf(name.get("huminity")), Toast.LENGTH_LONG).show();
+                        et_humidity.setText(String.valueOf(name.get("humidity"))+"%");
+                        Toast.makeText(mContext, String.valueOf(name.get("temperature"))+"\n"+String.valueOf(name.get("humidity")), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

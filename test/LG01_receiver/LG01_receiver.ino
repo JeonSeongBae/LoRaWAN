@@ -146,8 +146,8 @@ void uploadData(int th, int tl) {//Upload Data to ThingSpeak
 //  int sensor = random(10, 20);
 //  Console.println(sensor);
   Process p;
-//  p.runShellCommand("curl -k -X POST https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : { \"temperature\" : " + String(sensor) + ", \"huminity\" : " + String(sensor+1) + "} }'");
-  p.runShellCommand("curl -k -X POST https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : { \"temperature\" : " + String(th) + ", \"huminity\" : " + String(tl) + "} }'");
+//  p.runShellCommand("curl -k -X POST https://lorawan-53a5b.firebaseio.com/temperature.json -d '{ \"value\" : { \"temperature\" : " + String(sensor) + ", \"humidity\" : " + String(sensor+1) + "} }'");
+  p.runShellCommand("curl -k -X PUT https://lorawan-53a5b.firebaseio.com/users.json -d '{ \"name\" : { \"temperature\" : " + String(th) + ", \"humidity\" : " + String(tl) + "} }'");
   while(p.running());
   Console.println("===== End ====="); 
   delay(2000);
