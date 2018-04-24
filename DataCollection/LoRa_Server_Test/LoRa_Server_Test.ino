@@ -10,7 +10,7 @@
 
 // Singleton instance of the radio driver
 RH_RF95 rf95;
-int i = 0;
+
 float frequency = 868.0;
 
 void setup() 
@@ -24,16 +24,16 @@ void setup()
   // Setup ISM frequency
   rf95.setFrequency(frequency);
   // Setup Power,dBm
-  rf95.setTxPower(20);
+  rf95.setTxPower(13);
   
   // Setup Spreading Factor (6 ~ 12)
-  rf95.setSpreadingFactor(9);
+  rf95.setSpreadingFactor(7);
   
   // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
-  rf95.setSignalBandwidth(31250);
+  rf95.setSignalBandwidth(31200);
   
   // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8) 
-  rf95.setCodingRate4(8);
+  rf95.setCodingRate4(5);
   
   Console.print("Listening on frequency: ");
   Console.println(frequency);
@@ -51,13 +51,14 @@ void loop()
       RH_RF95::printBuffer("request: ", buf, len);
       Console.print("got request: ");
       Console.println((char*)buf);
+      Console.print("RSSI: ");
+      Console.println(rf95.lastRssi(), DEC);
       
       // Send a reply
       uint8_t data[] = "1";
-      rf95.send(data, sizeof(data)); 
+      rf95.send(data, sizeof(data));
       rf95.waitPacketSent();
-      Console.print(i++);      
-      Console.println(" : Sent a reply");
+      Console.println("Sent a reply");
     }
     else
     {
@@ -65,3 +66,8 @@ void loop()
     }
   }
 }
+
+
+
+
+
